@@ -9,7 +9,7 @@ PRs, RFCs and comments are welcome!
 ## Usage
 
 ### Shorthand usage
-```
+```javascript
 export default Ember.Component.extend({
   didReceiveAttrs: diffAttrs('email', 'isAdmin', function(changedAttrs, ...args) {
     this._super(...args);
@@ -30,7 +30,7 @@ Some quick notes:
 
 ### Extended usage
 
-```
+```javascript
 export default Ember.Component.extend({
   didReceiveAttrs: diffAttrs({
     keys: ['user', 'isAdmin'],
