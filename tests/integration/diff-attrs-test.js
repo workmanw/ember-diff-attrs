@@ -13,11 +13,10 @@ moduleForComponent('x-changer', 'Integration | diffAttrs', {
 });
 
 test('Basic usage', function(assert) {
-  let changedAttrs, changedInvokeCount = 0;
+  let changedAttrs;
   registerComponent(this, {
-    didReceiveAttrs: diffAttrs(['email', 'isAdmin'], function(changedAttrsArg) {
+    didReceiveAttrs: diffAttrs('email', 'isAdmin', function(changedAttrsArg) {
       changedAttrs = changedAttrsArg;
-      changedInvokeCount++;
     })
   });
 
@@ -27,32 +26,28 @@ test('Basic usage', function(assert) {
 
   this.render(hbs`{{x-changer email=email isAdmin=isAdmin name=name}}`);
 
-  assert.equal(changedInvokeCount, 1, 'There is an invocation on init.');
-  assert.equal(changedAttrs.email[0], undefined);
-  assert.equal(changedAttrs.email[1], 'ember@hamster.org');
-  assert.equal(changedAttrs.isAdmin[0], undefined);
-  assert.equal(changedAttrs.isAdmin[1], false);
+  assert.notOk(changedAttrs, '`changedAttrs` is null init.');
 
   this.set('email', 'emberjs@hamster.org');
-  assert.equal(changedInvokeCount, 2, 'There is an invocation on update.');
   assert.equal(changedAttrs.email[0], 'ember@hamster.org');
   assert.equal(changedAttrs.email[1], 'emberjs@hamster.org');
   assert.notOk(changedAttrs.isAdmin);
 
   this.set('name', 'TheTomster');
-  assert.equal(changedInvokeCount, 2, 'There was no invocation for update of non-observer attr.');
+  assert.equal(Object.keys(changedAttrs).length, 0, '`changedAttrs` is because `name` is not tracked');
 });
 
-test('Calls `_super`', function(assert) {
-  let superInvokeCount = 0, changedInvokeCount = 0;
+test('Calling `_super`', function(assert) {
+  let superInvokeCount = 0, changedAttrs;
   let SuperComponent = Ember.Component.extend({
     didReceiveAttrs() {
       superInvokeCount++;
     }
   });
   registerComponent(this, {
-    didReceiveAttrs: diffAttrs(['email', 'isAdmin'], function() {
-      changedInvokeCount++;
+    didReceiveAttrs: diffAttrs('email', function(changedAttrsArg, ...args) {
+      this._super(...args);
+      changedAttrs = changedAttrsArg;
     })
   }, SuperComponent);
 
@@ -62,25 +57,24 @@ test('Calls `_super`', function(assert) {
   this.render(hbs`{{x-changer email=email name=name}}`);
 
   assert.equal(superInvokeCount, 1, 'Super invoked on init.');
-  assert.equal(changedInvokeCount, 1, 'Changed invoked on init.');
+  assert.notOk(changedAttrs, '`changedAttrs` is null init.');
 
   this.set('email', 'emberjs@hamster.org');
   assert.equal(superInvokeCount, 2, 'Super invoked on change.');
-  assert.equal(changedInvokeCount, 2, 'Changed invoked on change.');
+  assert.ok(changedAttrs.email, 'Email was changed.');
 
   this.set('name', 'TheTomster');
   assert.equal(superInvokeCount, 3, 'Super invoked when there is no difference.');
-  assert.equal(changedInvokeCount, 2, 'Changed not when there is no difference.');
+  assert.equal(Object.keys(changedAttrs).length, 0, '`changedAttrs` is because `name` is not tracked');
 });
 
 test('Options', function(assert) {
-  let changedAttrs, changedInvokeCount = 0;
+  let changedAttrs;
   registerComponent(this, {
     didReceiveAttrs: diffAttrs({
       keys: ['email', 'isAdmin'],
-      changed(changedAttrsArg) {
+      hook(changedAttrsArg) {
         changedAttrs = changedAttrsArg;
-        changedInvokeCount++;
       }
     })
   });
@@ -91,48 +85,47 @@ test('Options', function(assert) {
 
   this.render(hbs`{{x-changer email=email isAdmin=isAdmin name=name}}`);
 
-  assert.equal(changedInvokeCount, 1, 'There is an invocation on init.');
-  assert.equal(changedAttrs.email[0], undefined);
-  assert.equal(changedAttrs.email[1], 'ember@hamster.org');
-  assert.equal(changedAttrs.isAdmin[0], undefined);
-  assert.equal(changedAttrs.isAdmin[1], false);
+  assert.notOk(changedAttrs, '`changedAttrs` is null init.');
 
   this.set('email', 'emberjs@hamster.org');
-  assert.equal(changedInvokeCount, 2, 'There is an invocation on update.');
   assert.equal(changedAttrs.email[0], 'ember@hamster.org');
   assert.equal(changedAttrs.email[1], 'emberjs@hamster.org');
   assert.notOk(changedAttrs.isAdmin);
 
   this.set('name', 'TheTomster');
-  assert.equal(changedInvokeCount, 2, 'There was no invocation for update of non-observer attr.');
+  assert.equal(Object.keys(changedAttrs).length, 0, '`changedAttrs` is because `name` is not tracked');
 });
 
 test('Options - Compare', function(assert) {
-  let changedInvokeCount = 0;
+  let changedAttrs = {};
   registerComponent(this, {
     didReceiveAttrs: diffAttrs({
-      keys: ['user'],
-      isEqual(a, b) {
-        return (a && b) ? a.id === b.id : a === b;
+      keys: ['user', 'isAdmin'],
+      isEqual(key, a, b) {
+        if (key === 'user') {
+          return (a && b) ? a.id === b.id : a === b;
+        }
+        return a === b;
       },
-      changed() {
-        changedInvokeCount++;
+      hook(changedAttrsArg) {
+        changedAttrs = changedAttrsArg;
       }
     })
   });
 
   this.set('user', { name: 'Tomster', id: '123' });
+  this.set('isAdmin', false);
 
-  this.render(hbs`{{x-changer user=user}}`);
+  this.render(hbs`{{x-changer user=user isAdmin=isAdmin}}`);
 
-  assert.equal(changedInvokeCount, 1, 'There is an invocation on init.');
+  assert.notOk(changedAttrs, '`changedAttrs` is null init.');
 
   this.set('user', { name: 'TheTomster', id: '123' });
-  assert.equal(changedInvokeCount, 1, 'No change invocation because user entities are equal');
+  assert.equal(Object.keys(changedAttrs).length, 0, '`user` not included in `changedAttrs` because user entities are equal');
 
   this.set('user', { name: 'Zoey', id: '456' });
-  assert.equal(changedInvokeCount, 2, 'Invocation because the user id was changed');
-});
+  assert.ok(changedAttrs.user, '`user` included in `changedAttrs` because `user.id` is different.');
 
-// Test options
-//   - Fire on no change
+  this.set('isAdmin', true);
+  assert.ok(changedAttrs.isAdmin, '`isAdmin` fell back to the default comparer');
+});

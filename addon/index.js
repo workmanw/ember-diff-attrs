@@ -1,40 +1,51 @@
-import Ember from 'ember';
+import WeakMap from 'ember-weakmap';
 
-function isEqual(a, b) {
+
+function isEqual(key, a, b) {
   return a === b;
 }
 
-export default function(keys, changed) {
-  let oldValueMap = {},
-      isEqualFunc = isEqual;
+export default function(keys, hook) {
+  let oldValuesMap = new WeakMap();
+  let isEqualFunc = isEqual;
 
-  if (typeof keys === 'object' && !Ember.isArray(keys)) {
+  if (typeof keys === 'object') {
     let options = keys;
     keys = options.keys;
 
     if (options.isEqual) {
       isEqualFunc = options.isEqual;
     }
-    if (options.changed) {
-      changed = options.changed;
+    if (options.hook) {
+      hook = options.hook;
     }
+  } else if (arguments.length > 1) {
+    keys = [].slice.call(arguments);
+    hook = keys.pop();
+  } else {
+    throw new Error('Invalid `diffAttrs` argument. Expected either one or more strings and a function, or an options hash.');
   }
 
   return function() {
-    this._super(...arguments);
-
     let changedAttrs = {};
+    let oldValues;
+    let isFirstCall = false;
+
+    if (!oldValuesMap.has(this)) {
+      isFirstCall = true;
+      oldValuesMap.set(this, {});
+    }
+
+    oldValues = oldValuesMap.get(this);
 
     keys.forEach(key => {
       let value = this.get(key);
-      if (!isEqualFunc(oldValueMap[key], value)) {
-        changedAttrs[key] = [oldValueMap[key], value];
-        oldValueMap[key] = value;
+      if (!isEqualFunc(key, oldValues[key], value)) {
+        changedAttrs[key] = [oldValues[key], value];
+        oldValues[key] = value;
       }
     });
 
-    if (Object.keys(changedAttrs).length > 0) {
-      changed.apply(this, [changedAttrs, ...arguments]);
-    }
+    hook.apply(this, [(isFirstCall ? null : changedAttrs), ...arguments]);
   };
 }

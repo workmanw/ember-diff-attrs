@@ -1,6 +1,6 @@
 {
   "name": "ember-diff-attrs",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "The default blueprint for ember-cli addons.",
   "keywords": [
     "ember-addon"
@@ -40,6 +40,7 @@
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
+    "ember-weakmap": "2.0.0",
     "ember-welcome-page": "^1.0.3",
     "loader.js": "^4.0.10"
   },
