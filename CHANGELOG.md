@@ -1,9 +1,13 @@
-# ember-qunit-assert-helpers Changelog
+# ember-diff-attrs Changelog
+
+### 0.1.2 (February 19th, 2017)
+
+- [#2](https://github.com/workmanw/ember-diff-attrs/pull/2) Added ember-weakmap as a dependency (@workmanw)
 
 ### 0.1.1 (February 8th, 2017)
 
-- Added repository information to the `package.json` so it could be located by NPM and Ember Observer.
+- Added repository information to the `package.json` so it could be located by NPM and Ember Observer (@workmanw)
 
 ### 0.1.0 (December 25th, 2016)
 
-- [#1](https://github.com/workmanw/ember-qunit-assert-helpers/pull/1) Initial implementation (@workmanw)
+- Initial implementation (@workmanw)
