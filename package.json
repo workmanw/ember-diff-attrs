@@ -1,12 +1,12 @@
 {
   "name": "ember-diff-attrs",
   "version": "0.1.1",
-  "description": "The default blueprint for ember-cli addons.",
+  "description": "An ember-addon that provides a dry way to track attribute changes using a component's didReceiveAttrs lifecycle hook.",
   "keywords": [
     "ember-addon"
   ],
   "license": "MIT",
-  "author": "",
+  "author": "Wesley Workman",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -21,7 +21,8 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "ember-cli-babel": "^5.1.7"
+    "ember-cli-babel": "^5.1.7",
+    "ember-weakmap": "2.0.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
@@ -43,7 +44,6 @@
     "ember-export-application-global": "^1.0.5",
     "ember-load-initializers": "^0.5.1",
     "ember-resolver": "^2.0.3",
-    "ember-weakmap": "2.0.0",
     "loader.js": "^4.0.10"
   },
   "engines": {
