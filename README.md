@@ -10,6 +10,8 @@ PRs, RFCs and comments are welcome!
 
 ### Shorthand usage
 ```javascript
+import diffAttrs from 'ember-diff-attrs';
+
 export default Ember.Component.extend({
   didReceiveAttrs: diffAttrs('email', 'isAdmin', function(changedAttrs, ...args) {
     this._super(...args);
@@ -31,6 +33,8 @@ Some quick notes:
 ### Extended usage
 
 ```javascript
+import diffAttrs from 'ember-diff-attrs';
+
 export default Ember.Component.extend({
   didReceiveAttrs: diffAttrs({
     keys: ['user', 'isAdmin'],
