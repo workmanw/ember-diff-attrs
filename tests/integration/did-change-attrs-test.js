@@ -20,6 +20,8 @@ test('Basic usage', function(assert) {
     },
 
     didChangeAttrs(changes) {
+      this._super(...arguments);
+
       didChangeAttrsCallCount++;
       changedAttrs = changes;
     }
