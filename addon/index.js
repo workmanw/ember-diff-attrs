@@ -1,12 +1,11 @@
-import WeakMap from 'ember-weakmap';
-
+import Ember from 'ember';
 
 function isEqual(key, a, b) {
   return a === b;
 }
 
 export default function(keys, hook) {
-  let oldValuesMap = new WeakMap();
+  let oldValuesMap = new Ember.WeakMap();
   let isEqualFunc = isEqual;
 
   if (typeof keys === 'object') {
