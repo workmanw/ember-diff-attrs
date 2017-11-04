@@ -1,6 +1,6 @@
 # ember-diff-attrs Changelog
 
-### 0.2.0
+### 0.2.0 (Novermber 11th, 2017)
 
 - Upgrade ember-weakmap to 3.0 (@ryanto)
 
