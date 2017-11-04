@@ -6,6 +6,12 @@ ember-diff-attrs provides a dry way to track attribute changes using a component
 
 PRs, RFCs and comments are welcome!
 
+## ember-did-change-attrs
+
+@GavinJoyce and I (mostly Gavin) created an alternative version of this addon that offers a slightly cleaner API using a mixin instead of a decorator. 
+
+See: [ember-did-change-attrs](https://github.com/workmanw/ember-did-change-attrs)
+
 ## Usage
 
 ### Shorthand usage
