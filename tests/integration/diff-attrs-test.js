@@ -1,10 +1,10 @@
-import Ember from 'ember';
+import EmComponent from '@ember/component'
 import { test, moduleForComponent } from 'ember-qunit';
 import hbs from 'htmlbars-inline-precompile';
 import diffAttrs from 'ember-diff-attrs';
 
 
-function registerComponent(testSuite, hash, klass = Ember.Component) {
+function registerComponent(testSuite, hash, klass = EmComponent) {
   testSuite.register('component:x-changer', klass.extend(hash));
 }
 
@@ -39,7 +39,7 @@ test('Basic usage', function(assert) {
 
 test('Calling `_super`', function(assert) {
   let superInvokeCount = 0, changedAttrs;
-  let SuperComponent = Ember.Component.extend({
+  let SuperComponent = EmComponent.extend({
     didReceiveAttrs() {
       superInvokeCount++;
     }
