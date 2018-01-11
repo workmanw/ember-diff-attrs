@@ -1,8 +1,12 @@
 # ember-diff-attrs Changelog
 
-### 0.2.0 (Novermber 11th, 2017)
+### 0.2.1 (January 11th, 2018)
 
-- Upgrade ember-weakmap to 3.0 (@ryanto)
+- [#9](https://github.com/workmanw/ember-diff-attrs/pull/9) Upgraded addon packages/structure to match Ember 2.18. Resolves [#8](https://github.com/workmanw/ember-diff-attrs/pull/8) (@workmanw)
+
+### 0.2.0 (November 11th, 2017)
+
+- [#6](https://github.com/workmanw/ember-diff-attrs/pull/6) Upgrade ember-weakmap to 3.0 (@ryanto)
 
 ### 0.1.2 (February 19th, 2017)
 
