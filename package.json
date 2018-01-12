@@ -1,6 +1,6 @@
 {
   "name": "ember-diff-attrs",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "An ember-addon that provides a dry way to track attribute changes using a component's didReceiveAttrs lifecycle hook.",
   "keywords": [
     "ember-addon"
