@@ -1,5 +1,8 @@
 # ember-diff-attrs Changelog
 
+- [#14](https://github.com/workmanw/ember-diff-attrs/pull/14) Removed `ember-weakmap` (@scalvert, @workmanw)
+- [#13](https://github.com/workmanw/ember-diff-attrs/pull/13) Update ember and ember-cli (@Duder-onomy)
+
 ### 0.2.1 (January 11th, 2018)
 
 - [#9](https://github.com/workmanw/ember-diff-attrs/pull/9) Upgraded addon packages/structure to match Ember 2.18. Resolves [#8](https://github.com/workmanw/ember-diff-attrs/pull/8) (@workmanw)
