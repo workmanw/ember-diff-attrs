@@ -8,7 +8,7 @@ PRs, RFCs and comments are welcome!
 
 ## ember-did-change-attrs
 
-@GavinJoyce and I (mostly Gavin) created an alternative version of this addon that offers a slightly cleaner API using a mixin instead of a decorator. 
+@GavinJoyce and I (mostly Gavin) created an alternative version of this addon that offers a slightly cleaner API using a mixin instead of a decorator.
 
 See: [ember-did-change-attrs](https://github.com/workmanw/ember-did-change-attrs)
 
@@ -79,8 +79,20 @@ I followed ember-data's precedence for representing old and new values (`model.c
 
 Since this addon is implemented as a macro, it cannot easily utilize a component's `init` call to setup. Because of this, we are unable to determine what has changed the first time `didUpdateAttrs` is called.  
 
-## Running Tests
+### Running tests
 
-* `npm test` (Runs `ember try:each` to test your addon against multiple Ember versions)
-* `ember test`
-* `ember test --server`
+* `ember test` – Runs the test suite on the current Ember version
+* `ember test --server` – Runs the test suite in "watch mode"
+* `ember try:each` – Runs the test suite against multiple Ember versions
+
+### Running the dummy application
+
+* `ember serve`
+* Visit the dummy application at [http://localhost:4200](http://localhost:4200).
+
+For more information on using ember-cli, visit [https://ember-cli.com/](https://ember-cli.com/).
+
+License
+------------------------------------------------------------------------------
+
+This project is licensed under the [MIT License](LICENSE.md).
