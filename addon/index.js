@@ -1,3 +1,4 @@
+import { expandProperties } from '@ember/object/computed';
 
 function isEqual(key, a, b) {
   return a === b;
@@ -36,7 +37,10 @@ export default function(keys, hook) {
 
     oldValues = oldValuesMap.get(this);
 
-    keys.forEach(key => {
+    const expandedKeys = [];
+    keys.forEach(key => expandProperties(key, expandedKey => expandedKeys.push(expandedKey)));
+
+    expandedKeys.forEach(key => {
       let value = this.get(key);
       if (!isEqualFunc(key, oldValues[key], value)) {
         changedAttrs[key] = [oldValues[key], value];
