@@ -129,3 +129,112 @@ test('Options - Compare', function(assert) {
   this.set('isAdmin', true);
   assert.ok(changedAttrs.isAdmin, '`isAdmin` fell back to the default comparer');
 });
+
+[true, false].forEach(shorthandUsage => {
+  const usage = shorthandUsage ? 'shorthand' : 'extended';
+
+  test(`With ${usage} usage, brace expansion does not affect tracked properties outside of the braces`, function(assert) {
+    let changedAttrs = {};
+    if (shorthandUsage) {
+      registerComponent(this, {
+        didReceiveAttrs: diffAttrs('isAdmin', 'user.{forename,email}', function(changedAttrsArg) {
+          changedAttrs = changedAttrsArg;
+        })
+      });
+    } else {
+      registerComponent(this, {
+        didReceiveAttrs: diffAttrs({
+          keys: ['isAdmin', 'user.{forename,email}'],
+          hook(changedAttrsArg) {
+            changedAttrs = changedAttrsArg;
+          }
+        })
+      });
+    }
+
+    this.setProperties({
+      user: {
+        forename: 'Bob',
+        surname: 'Smith',
+        email: 'bob@smith'
+      },
+      isAdmin: false
+    });
+
+    this.render(hbs`{{x-changer user=user isAdmin=isAdmin}}`);
+    assert.notOk(changedAttrs, '`changedAttrs` is null initially');
+
+    this.set('isAdmin', true);
+    assert.equal(Object.keys(changedAttrs).join(), 'isAdmin', '`isAdmin` should be the only changed property');
+  });
+
+  test(`With ${usage} usage, brace expansion works on multiple properties across multiple sets of braces`, function(assert) {
+    let changedAttrs = {};
+    if (shorthandUsage) {
+      registerComponent(this, {
+        didReceiveAttrs: diffAttrs('user.{forename,age}', 'admin.{surname,email,age}', function(changedAttrsArg) {
+          changedAttrs = changedAttrsArg;
+        })
+      });
+    } else {
+      registerComponent(this, {
+        didReceiveAttrs: diffAttrs({
+          keys: ['user.{forename,age}', 'admin.{surname,email,age}'],
+          hook(changedAttrsArg) {
+            changedAttrs = changedAttrsArg;
+          }
+        })
+      });
+    }
+
+    this.setProperties({
+      user: {
+        forename: 'Bob',
+        surname: 'Smith',
+        email: 'bob@smith',
+        age: 22
+      },
+      admin: {
+        forename: 'Fred',
+        surname: 'Jones',
+        email: 'fred@jones',
+        age: 42
+      }
+    });
+
+    this.render(hbs`{{x-changer user=user admin=admin}}`);
+    assert.notOk(changedAttrs, '`changedAttrs` is null initially');
+
+    this.setProperties({
+      user: {
+        forename: 'Bob',
+        surname: 'Smythe',
+        email: 'bob@smythe',
+        age: 22
+      },
+      admin: {
+        forename: 'Freddy',
+        surname: 'Jones',
+        email: 'fred@jones',
+        age: 42
+      }
+    });
+    assert.equal(Object.keys(changedAttrs).join(), '', 'No tracked properties should have changed');
+
+    this.setProperties({
+      user: {
+        forename: 'Robert',
+        surname: 'Smythe',
+        email: 'robert@smythe',
+        age: 23
+      },
+      admin: {
+        forename: 'Freddy',
+        surname: 'Johnston',
+        email: 'freddy@johnston',
+        age: 42
+      }
+    });
+    assert.equal(Object.keys(changedAttrs).join(), 'user.forename,user.age,admin.surname,admin.email', 'Brace expansion should have worked');
+  });
+});
